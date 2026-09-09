@@ -1,0 +1,9 @@
+# the data-URI build for the claude.ai artifact host — 4 MB, regenerate
+# with `node build-artifact.mjs`. GitHub Pages serves assets/ directly,
+# so this is never needed for the live site.
+dist/
+
+node_modules/
+Thumbs.db
+desktop.ini
+.DS_Store

@@ -1,0 +1,824 @@
+<title>Dreamy Photography</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Schibsted+Grotesk:wght@400;500&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   DREAMY PHOTOGRAPHY — Jahidul Islam. Bandarban, November 2025.
+
+   Design is direction D, the A+B+C merge:
+     B  the twelve-column grid left visible, one sans at 400 on paper
+     A  editorial scale, the frame bleeding off the right edge, ultramarine
+     C  the black ground, where the photographs are shown
+   Two grounds, one accent. Corners sharp on paper, round only when a
+   frame floats on the black. Single committed theme.
+
+   Photographs are real files under assets/. If one is missing its CSS
+   plate shows through, so the page is never broken — only quieter.
+   build-artifact.mjs inlines them as data URIs for the claude.ai host,
+   which blocks relative media.
+   ═══════════════════════════════════════════════════════════════════ */
+:root{
+  --paper:#f4f4f1;
+  --paper-inset:#eaeae5;
+  --void:#000000;
+  --ink:#16161a;
+  --ink-muted:#6e6e68;
+  --ink-faint:#a3a39c;
+  --rule:#dcdcd6;
+  --rule-strong:#16161a;
+  --on-void:#ffffff;
+  --on-void-muted:#8a8a90;
+  --accent:#1f3bef;
+  --accent-on-void:#6e82ff;
+
+  --f-sans:"Schibsted Grotesk",ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --f-mono:"DM Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --f-mast:"Anton",var(--f-sans);
+
+  --t-micro:0.6875rem;  --t-body:1rem;    --t-lead:1.25rem;
+  --t-h4:1.5625rem;     --t-h3:1.953rem;  --t-h2:2.441rem;
+  --t-h1:3.8rem;        --t-display:clamp(3rem,8.4vw,6.5rem);
+  --track-tight:-.03em; --track-label:.13em;
+
+  --s-8:.5rem; --s-16:1rem; --s-24:1.5rem; --s-32:2rem; --s-48:3rem;
+  --s-64:4rem; --s-96:6rem;
+  --gutter:clamp(1.25rem,3.4vw,3rem);
+  --shell:1440px;
+
+  --r-sharp:0px; --r-plate:2px; --r-float:24px; --r-pill:999px;
+  --sh-contact:0 40px 80px -20px rgb(0 0 0 / .6);
+  --sh-lift:0 18px 40px -12px rgb(0 0 0 / .28);
+  --ease:cubic-bezier(.22,1,.36,1);
+  --d-fast:200ms; --d-base:320ms; --d-slow:500ms;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-sans);
+  font-size:var(--t-body);line-height:1.45;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{margin:0;font-weight:400;letter-spacing:var(--track-tight);text-wrap:balance}
+p{margin:0}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.void :focus-visible,dialog :focus-visible{outline-color:var(--accent-on-void)}
+
+.shell{max-width:var(--shell);margin:0 auto;padding-inline:var(--gutter)}
+.g12{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--s-24)}
+@media (max-width:860px){.g12{grid-template-columns:repeat(6,1fr)}}
+
+.label{font-family:var(--f-mono);font-size:var(--t-micro);letter-spacing:var(--track-label);
+  text-transform:uppercase;color:var(--ink-muted)}
+.void .label{color:var(--on-void-muted)}
+.rule-strong{height:2px;background:var(--rule-strong);border:0;margin:0}
+.todo{color:var(--accent);font-family:var(--f-mono);font-size:var(--t-micro);
+  letter-spacing:.06em}
+
+.a-link{font-family:var(--f-mono);font-size:var(--t-micro);letter-spacing:var(--track-label);
+  text-transform:uppercase;color:var(--accent);text-decoration:none;
+  border-top:1px solid var(--accent);padding-top:var(--s-16);
+  display:inline-block;align-self:flex-start;
+  transition:color var(--d-fast) var(--ease),border-color var(--d-fast) var(--ease)}
+.a-link:hover{color:var(--ink);border-color:var(--ink)}
+
+/* ═══ frames ═══ */
+.plate{display:block;position:relative;overflow:hidden;border-radius:var(--r-plate);
+  background-color:#2a2f33;background-size:cover;background-position:center;
+  isolation:isolate}
+.shot{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;z-index:1}
+.plate::before{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.84' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:.07;mix-blend-mode:overlay}
+.bloom{position:absolute;inset:0;z-index:2;pointer-events:none;mix-blend-mode:soft-light;
+  background:
+    radial-gradient(72% 46% at 50% 14%,rgb(255 246 228 / .22),transparent 72%),
+    linear-gradient(180deg,rgb(255 255 255 / .1),transparent 46%)}
+.vig{position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:radial-gradient(122% 92% at 50% 44%,transparent 56%,rgb(0 0 0 / .22) 100%)}
+
+/* stand-ins, shown only if a photo file is absent */
+.p-cloud{background-image:linear-gradient(179deg,#7fb6e6 0%,#a8cdec 38%,#d6e4ee 52%,
+  #eef2f3 58%,#cfd8cf 63%,#6e8467 78%,#3f5340 100%)}
+.p-gold{background-image:linear-gradient(179deg,#8fb8d8 0%,#cfd0c2 40%,#e8c893 52%,
+  #b98b52 62%,#5c4a33 82%,#2b241b 100%)}
+
+/* ── masthead ── */
+.mast{position:sticky;top:0;z-index:40;background:var(--paper);
+  border-bottom:1px solid var(--rule)}
+.mast__in{max-width:var(--shell);margin:0 auto;padding:var(--s-16) var(--gutter);
+  display:flex;align-items:baseline;justify-content:space-between;gap:var(--s-24)}
+.brand{display:flex;align-items:baseline;gap:.6rem;text-decoration:none}
+.brand b{font-family:var(--f-mast);font-size:1.35rem;line-height:1;font-weight:400;
+  letter-spacing:.005em;text-transform:uppercase}
+.brand b i{font-style:normal;color:var(--accent)}
+.brand span{font-family:var(--f-mono);font-size:var(--t-micro);
+  letter-spacing:var(--track-label);text-transform:uppercase;color:var(--ink-muted)}
+.nav{display:flex;gap:clamp(.7rem,1.9vw,1.6rem);flex-wrap:wrap}
+.nav a{font-family:var(--f-mono);font-size:var(--t-micro);letter-spacing:var(--track-label);
+  text-transform:uppercase;color:var(--ink-muted);text-decoration:none;
+  transition:color var(--d-fast) var(--ease)}
+.nav a:hover{color:var(--ink)}
+
+/* ── hero ── */
+.hero{position:relative;overflow:hidden;padding-top:var(--s-48);padding-bottom:var(--s-96)}
+.hero__grid{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.7;
+  max-width:var(--shell);margin-inline:auto;
+  background-image:repeating-linear-gradient(90deg,var(--rule) 0 1px,transparent 1px calc(100%/12));
+  background-repeat:no-repeat;background-size:calc(100% - var(--gutter) * 2) 100%;
+  background-position:var(--gutter) 0}
+.hero .g12{position:relative;z-index:1;align-items:start}
+.hero__say{grid-column:1/7;display:flex;flex-direction:column;gap:var(--s-24);
+  padding-top:var(--s-32)}
+.hero h1{font-size:var(--t-display);line-height:.96}
+.hero__lede{font-size:var(--t-lead);line-height:1.4;color:var(--ink-muted);max-width:36ch}
+.hero__by{display:flex;gap:var(--s-16);flex-wrap:wrap;align-items:baseline}
+/* A's bleed: the frame runs off the right edge of the viewport. .hero
+   clips it, so the body never scrolls sideways. */
+.hero__plate{grid-column:7/13;display:flex;flex-direction:column;gap:var(--s-16);
+  margin-right:calc(-1 * max(var(--gutter),(100vw - var(--shell)) / 2 + var(--gutter)))}
+.hero__plate .plate{aspect-ratio:4/5;border-radius:0}
+.hero__cap{font-family:var(--f-mono);font-size:var(--t-micro);letter-spacing:.05em;
+  line-height:1.5;color:var(--ink-muted);border-top:1px solid var(--rule);
+  padding-top:var(--s-8);padding-right:var(--gutter)}
+@media (max-width:860px){
+  .hero__say{grid-column:1/7}
+  .hero__plate{grid-column:1/7;margin-right:0}
+  .hero__cap{padding-right:0}
+}
+
+/* ── journal ── */
+.sec{padding-block:var(--s-96)}
+.sec__head{display:flex;align-items:baseline;justify-content:space-between;
+  gap:var(--s-24);flex-wrap:wrap;margin-bottom:var(--s-24)}
+.sec__head h2{font-size:var(--t-h3)}
+.posts{list-style:none;margin:0;padding:0}
+.posts button{display:grid;width:100%;grid-template-columns:7rem 1fr 7rem 5rem;
+  gap:var(--s-24);align-items:start;padding:var(--s-32) 0;
+  border:0;border-bottom:1px solid var(--rule);background:transparent;cursor:pointer;
+  font:inherit;text-align:left;color:inherit;font-variant-numeric:tabular-nums;
+  transition:padding-left var(--d-base) var(--ease),color var(--d-base) var(--ease)}
+.posts button:hover{padding-left:var(--s-16);color:var(--accent)}
+.posts .when,.posts .where,.posts .mins{font-family:var(--f-mono);font-size:var(--t-micro);
+  letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);padding-top:.45rem}
+.posts .mins{text-align:right}
+.posts .mid{display:flex;flex-direction:column;gap:var(--s-8);min-width:0}
+.posts .name{font-size:var(--t-h4);letter-spacing:var(--track-tight)}
+.posts .dek{color:var(--ink-muted);font-size:.9375rem;line-height:1.5;max-width:56ch}
+.posts button:hover .when,.posts button:hover .where{color:var(--accent)}
+@media (max-width:860px){
+  .posts button{grid-template-columns:1fr auto;gap:var(--s-8) var(--s-16)}
+  .posts .mid{grid-column:1/3;order:2}
+  .posts .when{order:1}.posts .mins{order:1}.posts .where{display:none}
+}
+
+/* ── the black ground ── */
+.void{position:relative;background:var(--void);color:var(--on-void);overflow:hidden;
+  padding-block:var(--s-64) var(--s-96)}
+.void__floor{position:absolute;left:-60%;right:-60%;bottom:-8%;height:78%;z-index:0;
+  background-image:repeating-linear-gradient(90deg,rgb(255 255 255 /.3) 0 1px,transparent 1px 5.6%),
+                   repeating-linear-gradient(0deg,rgb(255 255 255 /.3) 0 1px,transparent 1px 40px);
+  transform:perspective(900px) rotateX(calc((74 + var(--tilt,0)) * 1deg))
+            translateY(var(--fty,0px));transform-origin:50% 100%;
+  -webkit-mask-image:linear-gradient(to top,#000 0%,transparent 62%);
+  mask-image:linear-gradient(to top,#000 0%,transparent 62%)}
+.void__in{position:relative;z-index:1}
+.void__head{display:flex;align-items:baseline;justify-content:space-between;
+  gap:var(--s-24);flex-wrap:wrap;margin-bottom:var(--s-32)}
+.void__head h2{font-size:var(--t-h3)}
+.void__meta{font-family:var(--f-mono);font-size:var(--t-micro);letter-spacing:var(--track-label);
+  text-transform:uppercase;color:var(--accent-on-void)}
+
+.tabs{display:flex;gap:var(--s-8);flex-wrap:wrap;margin-bottom:var(--s-48)}
+.tabs button{font-family:var(--f-mono);font-size:var(--t-micro);letter-spacing:.1em;
+  text-transform:uppercase;padding:.55rem .9rem;background:transparent;color:var(--on-void-muted);
+  border:1px solid rgb(255 255 255 / .2);border-radius:var(--r-pill);cursor:pointer;
+  transition:color var(--d-fast) var(--ease),border-color var(--d-fast) var(--ease),
+             background var(--d-fast) var(--ease)}
+.tabs button:hover{color:var(--on-void);border-color:var(--on-void-muted)}
+.tabs button[aria-selected="true"]{background:var(--on-void);color:var(--void);
+  border-color:var(--on-void)}
+
+.stage{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(1rem,2.6vw,2.5rem);
+  perspective:1400px;transform:translateX(var(--tx,0px))}
+@media (max-width:860px){.stage{grid-template-columns:1fr}}
+/* 3D composes from four inputs, each its own variable, so scroll,
+   pointer, resting angle and hover never fight over `transform` */
+.card{display:block;width:100%;position:relative;padding:0;border:0;background:transparent;
+  cursor:pointer;transform-style:preserve-3d;
+  transform:
+    rotateY(calc((var(--rY,0) + var(--sY,0) + var(--pY,0)) * 1deg))
+    rotateX(calc(var(--pX,0) * 1deg))
+    scale(var(--sc,1));
+  transition:transform var(--d-slow) var(--ease),filter var(--d-base) var(--ease)}
+.card .plate{aspect-ratio:4/5;border-radius:var(--r-float);box-shadow:var(--sh-contact)}
+.card:nth-child(1){--rY:11}
+.card:nth-child(3){--rY:-11}
+.card:hover,.card:focus-visible{--rY:0;--sc:1.02;filter:brightness(1.05)}
+.card__lbl{position:absolute;left:var(--s-24);bottom:var(--s-24);z-index:4;text-align:left;
+  font-size:var(--t-body);color:var(--on-void);text-shadow:0 1px 12px rgb(0 0 0 / .8)}
+.card__go{position:absolute;right:var(--s-24);bottom:var(--s-24);z-index:4;
+  width:2.25rem;height:2.25rem;border-radius:var(--r-pill);background:var(--void);
+  color:var(--on-void);display:grid;place-items:center;font-size:.8rem}
+.corners{position:relative;z-index:1;display:flex;justify-content:space-between;
+  gap:var(--s-24);margin-top:var(--s-48);padding-top:var(--s-16);
+  border-top:1px solid rgb(255 255 255 / .14)}
+
+/* ── motion graphics ─────────────────────────────────────
+   A scroll rail, a marquee, and the floor grid drifting under
+   the photographs. All stop for reduced-motion. */
+.rail{position:fixed;top:0;left:0;height:2px;width:100%;z-index:60;
+  background:transparent;pointer-events:none}
+.rail i{display:block;height:100%;width:100%;background:var(--accent);
+  transform:scaleX(var(--p,0));transform-origin:0 50%}
+.band{background:var(--void);color:var(--on-void);overflow:hidden;
+  padding-block:var(--s-32);border-block:1px solid rgb(255 255 255 / .14)}
+.band__track{display:flex;width:max-content;gap:0}
+.band__track b{font-family:var(--f-mast);font-weight:400;text-transform:uppercase;
+  font-size:clamp(2.25rem,6vw,4.5rem);line-height:1;letter-spacing:.01em;
+  white-space:nowrap;padding-right:.5em;opacity:.9}
+.band__track b em{font-style:normal;color:var(--accent-on-void);padding-inline:.18em}
+@media (prefers-reduced-motion:no-preference){
+  .band__track{animation:slide 38s linear infinite}
+  @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  /* one tile of the 40px grid per cycle, so the loop is seamless */
+  .void__floor{animation:crawl 9s linear infinite}
+  @keyframes crawl{
+    from{background-position:0 0,0 0}
+    to{background-position:0 0,0 40px}}
+}
+
+/* ── about ── */
+.about__plate{grid-column:1/5}
+.about__plate .plate{aspect-ratio:4/5}
+.about__say{grid-column:6/12;display:flex;flex-direction:column;gap:var(--s-32)}
+.about__say h2{font-size:var(--t-h2);line-height:1.06}
+.about__say p{color:var(--ink-muted)}
+.about__say p.first{color:var(--ink);font-size:var(--t-lead);line-height:1.4}
+.kit{list-style:none;margin:0;padding:0;display:grid;gap:var(--s-8);
+  font-family:var(--f-mono);font-size:var(--t-micro);letter-spacing:.04em;color:var(--ink-muted)}
+.kit li{display:grid;grid-template-columns:9rem 1fr;gap:var(--s-16);
+  padding-block:var(--s-8);border-bottom:1px solid var(--rule)}
+.kit b{font-weight:400;color:var(--ink);text-transform:uppercase;letter-spacing:var(--track-label)}
+.kit a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
+.kit a:hover{border-color:var(--accent)}
+@media (max-width:860px){
+  .about__plate{grid-column:1/7}.about__say{grid-column:1/7}
+  .kit li{grid-template-columns:1fr}
+}
+
+/* ── contact ── */
+.contact{background:var(--paper-inset);border-top:1px solid var(--rule)}
+.contact__say{grid-column:1/6;display:flex;flex-direction:column;gap:var(--s-24)}
+.contact__say h2{font-size:var(--t-h2);line-height:1.06}
+form{grid-column:7/13;display:grid;gap:var(--s-24)}
+@media (max-width:860px){.contact__say{grid-column:1/7}form{grid-column:1/7}}
+.field{display:grid;gap:var(--s-8)}
+.field label{font-family:var(--f-mono);font-size:var(--t-micro);
+  letter-spacing:var(--track-label);text-transform:uppercase;color:var(--ink-muted)}
+.field input,.field textarea{font:inherit;color:var(--ink);background:var(--paper);
+  border:1px solid var(--rule);border-radius:var(--r-sharp);padding:.7rem .8rem;
+  transition:border-color var(--d-fast) var(--ease)}
+.field input:hover,.field textarea:hover{border-color:var(--ink-faint)}
+.field textarea{min-height:6.5rem;resize:vertical}
+.btn{justify-self:start;font-family:var(--f-mono);font-size:var(--t-micro);
+  letter-spacing:var(--track-label);text-transform:uppercase;padding:.85rem 1.4rem;
+  background:var(--ink);color:var(--paper);border:1px solid var(--ink);
+  border-radius:var(--r-sharp);cursor:pointer;
+  transition:background var(--d-fast) var(--ease),transform var(--d-fast) var(--ease),
+             box-shadow var(--d-base) var(--ease)}
+.btn:hover{background:var(--accent);border-color:var(--accent);
+  transform:scale(1.02);box-shadow:var(--sh-lift)}
+.pairs{display:grid;gap:var(--s-16);margin:0}
+.pairs div{display:grid;grid-template-columns:8rem 1fr;gap:var(--s-16);
+  padding-bottom:var(--s-16);border-bottom:1px solid var(--rule)}
+.pairs dt{font-family:var(--f-mono);font-size:var(--t-micro);letter-spacing:var(--track-label);
+  text-transform:uppercase;color:var(--ink-muted)}
+.pairs dd{margin:0}
+.pairs a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;
+  transition:border-color var(--d-fast) var(--ease)}
+.pairs a:hover{border-color:var(--accent)}
+
+.foot{border-top:1px solid var(--rule);padding-block:var(--s-32);
+  display:flex;justify-content:space-between;gap:var(--s-24);flex-wrap:wrap}
+
+/* ── overlays ── */
+dialog{border:0;padding:0;background:transparent;width:100%}
+dialog::backdrop{background:rgb(0 0 0 / .94)}
+.x{position:fixed;top:var(--s-24);right:var(--s-24);z-index:9;
+  width:2.75rem;height:2.75rem;border-radius:var(--r-pill);background:var(--void);
+  color:var(--on-void);border:1px solid rgb(255 255 255 /.25);cursor:pointer;
+  font-size:1rem;display:grid;place-items:center;
+  transition:background var(--d-fast) var(--ease)}
+.x:hover{background:#1a1a1a}
+
+/* reader — paper, one column, no grid: reading is not a layout demo */
+#reader{max-width:min(760px,94vw)}
+.read{background:var(--paper);color:var(--ink);padding:clamp(1.75rem,5vw,4rem)}
+.read__meta{display:flex;gap:var(--s-16);flex-wrap:wrap;margin-bottom:var(--s-24)}
+.read h2{font-size:var(--t-h2);line-height:1.04;margin-bottom:var(--s-24)}
+.read__dek{font-size:var(--t-lead);line-height:1.45;color:var(--ink-muted);
+  padding-bottom:var(--s-32);border-bottom:1px solid var(--rule);margin-bottom:var(--s-32)}
+.read__body{display:flex;flex-direction:column;gap:var(--s-24);max-width:65ch}
+.read__body p{line-height:1.6}
+.read__body h3{font-size:var(--t-h4);margin-top:var(--s-16)}
+.read__body .pull{font-size:var(--t-lead);line-height:1.4;color:var(--ink);
+  border-left:2px solid var(--accent);padding-left:var(--s-24)}
+.read__body .draft{border-top:1px solid var(--rule);padding-top:var(--s-24)}
+.read .plate{aspect-ratio:3/2;margin-block:var(--s-16)}
+.read__fig{font-family:var(--f-mono);font-size:var(--t-micro);letter-spacing:.05em;
+  color:var(--ink-muted);margin-top:calc(var(--s-8) * -1)}
+
+/* lightbox — black, the photograph at its own shape */
+#lb{max-width:min(1100px,94vw)}
+.media{display:grid;gap:var(--s-24)}
+.media .plate{justify-self:center;max-width:100%;background-color:transparent}
+.media img{position:static;display:block;width:auto;max-width:100%;
+  max-height:76vh;height:auto;object-fit:contain}
+.media__bar{display:flex;align-items:baseline;justify-content:space-between;
+  gap:var(--s-24);flex-wrap:wrap;color:var(--on-void)}
+.media__bar h3{font-size:var(--t-h4);color:var(--on-void)}
+.media__cred{font-family:var(--f-mono);font-size:var(--t-micro);letter-spacing:.05em;
+  color:var(--on-void-muted)}
+.media .fallback{aspect-ratio:4/5;width:min(28rem,100%);border-radius:var(--r-float)}
+.missing{display:grid;place-items:center;height:100%;z-index:4;position:relative;
+  font-family:var(--f-mono);font-size:var(--t-micro);letter-spacing:.1em;
+  text-transform:uppercase;color:#fff;text-shadow:0 1px 10px rgb(0 0 0 /.9);padding:2rem;
+  text-align:center}
+</style>
+
+<div class="rail" aria-hidden="true"><i id="rail"></i></div>
+
+<header class="mast">
+  <div class="mast__in">
+    <a class="brand" href="#top"><b>Dreamy<i>.</i></b><span>Photography</span></a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#journal">Journal</a>
+      <a href="#frames">Frames</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- hero: the newest post ────────────────────────────── -->
+  <section class="hero">
+    <div class="hero__grid" aria-hidden="true"></div>
+    <div class="shell">
+      <div class="g12">
+        <div class="hero__say">
+          <p class="label">Bandarban &nbsp;/&nbsp; November 2025</p>
+          <h1>The morning the valley was full of cloud.</h1>
+          <p class="hero__lede">Three mornings on the hill platforms above Bandarban, where the
+            cloud sits in the valley until the sun gets high enough to take it away.</p>
+          <div class="hero__by">
+            <span class="label">Jahidul Islam</span>
+            <span class="label">14 Nov 2025</span>
+          </div>
+          <a class="a-link" href="#" data-read="cloud">Read the post &rarr;</a>
+        </div>
+        <div class="hero__plate">
+          <span class="plate p-cloud" data-shot="assets/hero-deck-cloud-sea.jpg">
+            <span class="bloom"></span><span class="vig"></span>
+          </span>
+          <p class="hero__cap">The deck above the cloud sea &mdash; Bandarban, 13 Nov 2025</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- journal ──────────────────────────────────────────── -->
+  <section class="sec" id="journal">
+    <div class="shell">
+      <div class="sec__head">
+        <h2>Journal</h2>
+        <p class="label">Select a post to read it</p>
+      </div>
+      <hr class="rule-strong">
+      <ul class="posts" data-reveal data-stagger>
+        <li><button type="button" data-read="cloud">
+          <span class="when">14 Nov 2025</span>
+          <span class="mid"><span class="name">The morning the valley was full of cloud</span>
+            <span class="dek">What the hill platforms above Bandarban look like before seven,
+              while the cloud is still sitting in the valley below the railing.</span></span>
+          <span class="where">Bandarban</span><span class="mins">3 min</span></button></li>
+        <li><button type="button" data-read="sunset">
+          <span class="when">13 Nov 2025</span>
+          <span class="mid"><span class="name">The other end of the same day</span>
+            <span class="dek">The cloud goes by mid-morning, so the evening is a different
+              picture entirely: no white valley, just a low sun and everything in silhouette.</span></span>
+          <span class="where">Bandarban</span><span class="mins">2 min</span></button></li>
+        <li><button type="button" data-read="deck">
+          <span class="when">13 Nov 2025</span>
+          <span class="mid"><span class="name">Shooting portraits on a bamboo platform</span>
+            <span class="dek">The viewpoints are built of bamboo and timber and they decide your
+              composition for you. Working with the railing instead of against it.</span></span>
+          <span class="where">Bandarban</span><span class="mins">3 min</span></button></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- the seam between paper and void, always moving ───── -->
+  <div class="band" aria-hidden="true">
+    <div class="band__track" id="band"></div>
+  </div>
+
+  <!-- frames: the photo stage ──────────────────────────── -->
+  <section class="void" id="frames">
+    <div class="void__floor" aria-hidden="true"></div>
+    <div class="shell void__in">
+      <div class="void__head">
+        <h2 id="stage-name">Above the Cloud</h2>
+        <p class="void__meta" id="stage-meta">Three frames turned toward the cloud layer</p>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Photo series">
+        <button role="tab" id="t-cloud" data-id="cloud" aria-selected="true" tabindex="0">Above the Cloud</button>
+        <button role="tab" id="t-deck" data-id="deck" aria-selected="false" tabindex="-1">On the Deck</button>
+      </div>
+      <div class="stage" id="stage-plates" role="tabpanel" aria-labelledby="t-cloud" tabindex="0"></div>
+      <div class="corners">
+        <p class="label">Six frames, two series &mdash; Bandarban, 13&ndash;14 Nov 2025</p>
+        <p class="label">Any frame opens full size</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- about ────────────────────────────────────────────── -->
+  <section class="sec" id="about">
+    <div class="shell">
+      <div class="g12">
+        <div class="about__plate" data-reveal>
+          <span class="plate p-gold" data-shot="assets/about-low-sun.jpg">
+            <span class="bloom"></span><span class="vig"></span>
+          </span>
+        </div>
+        <div class="about__say" data-reveal data-stagger>
+          <h2>Jahidul Islam</h2>
+          <p class="first">I go up to the hill viewpoints in Bandarban before sunrise, photograph
+            the hour the valley spends under cloud, and write down how it went.</p>
+          <p>Dreamy Photography is a travel journal &mdash; posts and frames from the same
+            mornings. Everything here was made on one trip in November 2025, and about half of
+            what I came back with is just white valley and bamboo railing.</p>
+          <ul class="kit">
+            <li><b>Journal</b><span>Bandarban, 13&ndash;15 November 2025</span></li>
+            <li><b>Email</b><span><a href="mailto:jahidulislam2004@gmail.com">jahidulislam2004@gmail.com</a></span></li>
+            <li><b>Facebook</b><span><a href="https://www.facebook.com/photo/?fbid=1001794342219151&amp;set=a.119937750404819" target="_blank" rel="noopener noreferrer">See the album</a></span></li>
+            <li><b>Based in</b><span class="todo">Add your city</span></li>
+            <li><b>Kit</b><span class="todo">Add your camera and lenses</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- contact ──────────────────────────────────────────── -->
+  <section class="sec contact" id="contact">
+    <div class="shell">
+      <div class="g12">
+        <div class="contact__say">
+          <h2>Get in touch</h2>
+          <p style="color:var(--ink-muted);max-width:46ch">For collaborations, prints, or if you
+            want to know which viewpoint this is and how to get up there.</p>
+          <dl class="pairs">
+            <div><dt>Email</dt>
+              <dd><a href="mailto:jahidulislam2004@gmail.com">jahidulislam2004@gmail.com</a></dd></div>
+            <div><dt>Facebook</dt>
+              <dd><a href="https://www.facebook.com/photo/?fbid=1001794342219151&amp;set=a.119937750404819" target="_blank" rel="noopener noreferrer">The Bandarban album</a></dd></div>
+          </dl>
+        </div>
+        <form id="enq">
+          <div class="field"><label for="f-name">Your name</label>
+            <input id="f-name" name="name" type="text" autocomplete="name" required></div>
+          <div class="field"><label for="f-mail">Email</label>
+            <input id="f-mail" name="email" type="email" autocomplete="email" required></div>
+          <div class="field"><label for="f-sub">About</label>
+            <input id="f-sub" name="subject" type="text" placeholder="Collaboration, print, or a question"></div>
+          <div class="field"><label for="f-msg">Message</label>
+            <textarea id="f-msg" name="message"></textarea></div>
+          <button class="btn" type="submit">Open in your mail app</button>
+          <p class="label" id="enq-note">This composes an email &mdash; nothing is sent from this page.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="shell foot">
+  <p class="label">&copy; 2026 Dreamy Photography &mdash; Jahidul Islam</p>
+  <p class="label">Set in Schibsted Grotesk, Anton and DM Mono</p>
+</footer>
+
+<dialog id="reader" aria-labelledby="read-title">
+  <button class="x" type="button" data-close aria-label="Close">&#10005;</button>
+  <article class="read">
+    <div class="read__meta"><span class="label" id="read-kicker"></span>
+      <span class="label" id="read-mins"></span></div>
+    <h2 id="read-title"></h2>
+    <p class="read__dek" id="read-dek"></p>
+    <div class="read__body" id="read-body"></div>
+  </article>
+</dialog>
+
+<dialog id="lb" aria-labelledby="lb-title">
+  <button class="x" type="button" data-close aria-label="Close">&#10005;</button>
+  <div class="media">
+    <span class="plate" id="lb-plate"></span>
+    <div class="media__bar"><h3 id="lb-title"></h3><p class="media__cred" id="lb-cred"></p></div>
+  </div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/motion@11.11.17/dist/motion.js"></script>
+<script>
+/* ═══ content ═══════════════════════════════════════════════════
+   Captions describe only what is in the frame. Dates come from the
+   files themselves. Nothing here names a viewpoint or claims an
+   event, because those are Jahidul's to add. */
+
+const FRAMES = {
+  cloud: { name:'Above the Cloud', meta:'Three frames turned toward the cloud layer', list:[
+    { no:'01', cls:'p-cloud', src:'assets/f1-cabin-lean.jpg',
+      t:'Against the cabin wall',     c:'Bandarban — 14 Nov 2025' },
+    { no:'02', cls:'p-cloud', src:'assets/f3-window.jpg',
+      t:'The cloud in the window',    c:'Bandarban — 14 Nov 2025' },
+    { no:'03', cls:'p-cloud', src:'assets/f2-bench.jpg',
+      t:'Looking out from the bench', c:'Bandarban — 14 Nov 2025' }]},
+  deck: { name:'On the Deck', meta:'Three frames on the viewing platform, clear morning sun', list:[
+    { no:'04', cls:'p-cloud', src:'assets/f4-rust-sweater.jpg',
+      t:'Rust sweater against white cloud', c:'Bandarban — 13 Nov 2025' },
+    { no:'05', cls:'p-cloud', src:'assets/f5-railing.jpg',
+      t:'On the railing',                   c:'Bandarban — 14 Nov 2025' },
+    { no:'06', cls:'p-cloud', src:'assets/f6-standing-black.jpg',
+      t:'Standing in black, cloud behind',  c:'Bandarban — 14 Nov 2025' }]}
+};
+
+const POSTS = {
+  cloud:{ kicker:'14 Nov 2025', mins:'3 min read',
+    title:'The morning the valley was full of cloud',
+    dek:'What the hill platforms above Bandarban look like before seven, while the cloud is still sitting in the valley below the railing.',
+    body:[
+      ['p','From the platform the valley is not a valley. It is a flat white surface with hills standing out of it, and it sits below you rather than in front of you, which is the part that does not come across in photographs.'],
+      ['pull','The cloud is the whole reason to be up there, and it is the one thing that will not wait for you.'],
+      ['h3','It goes'],
+      ['p','By mid-morning the sun is high enough to lift it and the same view is an ordinary green hillside. Everything in this post was photographed between about a quarter to seven and half past eight.'],
+      ['shot','assets/f3-window.jpg','p-cloud','03 — The cloud caught in the cabin window, rather than over the railing'],
+      ['h3','Put something in front of it'],
+      ['p','On its own the cloud reads as a grey-white band and means nothing. It needs a railing, a branch, a roof, a person — something at a known size in the front of the frame. Every frame here that works has one.'],
+      ['p','The one I like best is the window: the cloud is not in the view at all, it is in the glass.'],
+      ['draft','This is a draft written from the photographs. Replace it with your own account of the morning.'],
+    ]},
+  sunset:{ kicker:'13 Nov 2025', mins:'2 min read',
+    title:'The other end of the same day',
+    dek:'The cloud goes by mid-morning, so the evening is a different picture entirely: no white valley, just a low sun and everything in silhouette.',
+    body:[
+      ['p','If you only go up for sunrise you come back with one kind of picture. The evening on the same ridge gives you the opposite: nothing white in the valley, a low sun straight into the lens, and every shape reduced to an outline.'],
+      ['h3','Shoot into it'],
+      ['p','Facing the sun means you lose the face and the clothes and keep only the shape, which is why the frame in the About section works with the name across the shoulders — it is the only detail that survives.'],
+      ['pull','Two hours apart, the same ridge is two different places.'],
+      ['draft','This is a draft written from the photographs. Replace it with your own account of the evening.'],
+    ]},
+  deck:{ kicker:'13 Nov 2025', mins:'3 min read',
+    title:'Shooting portraits on a bamboo platform',
+    dek:'The viewpoints are built of bamboo and timber and they decide your composition for you. Working with the railing instead of against it.',
+    body:[
+      ['p','These platforms are narrow. You cannot back up, you cannot move the railing, and there is usually one place to sit. That sounds like a problem and mostly it is not.'],
+      ['h3','The railing is the frame'],
+      ['p','A woven bamboo railing is a strong horizontal line at exactly the height where it will cut a standing person in half. Sit the subject on it instead and it becomes a base for them, with the cloud starting immediately behind.'],
+      ['shot','assets/f4-rust-sweater.jpg','p-cloud','04 — Sitting on the platform instead of standing on it'],
+      ['h3','Warm against cold'],
+      ['p','The cloud is cold white and the sky is flat blue, so anything warm separates immediately. A rust sweater against that bank does most of the work; black against it works too, in the other direction.'],
+      ['draft','This is a draft written from the photographs. Replace it with your own account of the shoot.'],
+    ]}
+};
+
+/* ═══ media, falling back to the CSS plate if a file is absent ══ */
+
+function img(src, alt){
+  return `<img class="shot" src="${src}" alt="${alt}" loading="lazy" decoding="async"
+    onerror="this.remove()">`;
+}
+
+/* ═══ the photo stage ═══ */
+
+const stage  = document.getElementById('stage-plates');
+const tabs   = [...document.querySelectorAll('[role="tab"]')];
+const nameEl = document.getElementById('stage-name');
+const metaEl = document.getElementById('stage-meta');
+
+function paint(id){
+  const s = FRAMES[id];
+  if (!s) return;
+  nameEl.textContent = s.name;
+  metaEl.textContent = s.meta;
+  stage.setAttribute('aria-labelledby', 't-' + id);
+  stage.innerHTML = s.list.map(f => `
+    <button class="card" type="button" data-open="${id}:${s.list.indexOf(f)}">
+      <span class="plate ${f.cls}">${img(f.src, f.t)}
+        <span class="bloom"></span><span class="vig"></span></span>
+      <span class="card__lbl">${f.no} — ${f.t}</span>
+      <span class="card__go" aria-hidden="true">&#8599;</span>
+    </button>`).join('');
+}
+
+function select(id, focus){
+  tabs.forEach(t => {
+    const on = t.dataset.id === id;
+    t.setAttribute('aria-selected', String(on));
+    t.tabIndex = on ? 0 : -1;
+    if (on && focus) t.focus();
+  });
+  paint(id);
+}
+
+tabs.forEach((t, i) => {
+  t.addEventListener('click', () => select(t.dataset.id, false));
+  t.addEventListener('keydown', e => {
+    const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1
+            : e.key === 'Home' ? -i : e.key === 'End' ? tabs.length - 1 - i : 0;
+    if (!d) return;
+    e.preventDefault();
+    select(tabs[(i + d + tabs.length) % tabs.length].dataset.id, true);
+  });
+});
+paint('cloud');
+
+/* hero and about frames get their photographs */
+document.querySelectorAll('.plate[data-shot]').forEach(p => {
+  p.insertAdjacentHTML('afterbegin', img(p.dataset.shot, ''));
+});
+
+/* ═══ overlays ═══ */
+
+const reader = document.getElementById('reader');
+const lb     = document.getElementById('lb');
+
+function openPost(id){
+  const p = POSTS[id];
+  if (!p) return;
+  document.getElementById('read-kicker').textContent = p.kicker;
+  document.getElementById('read-mins').textContent   = p.mins;
+  document.getElementById('read-title').textContent  = p.title;
+  document.getElementById('read-dek').textContent    = p.dek;
+  document.getElementById('read-body').innerHTML = p.body.map(b => {
+    if (b[0] === 'p')     return `<p>${b[1]}</p>`;
+    if (b[0] === 'h3')    return `<h3>${b[1]}</h3>`;
+    if (b[0] === 'pull')  return `<p class="pull">${b[1]}</p>`;
+    if (b[0] === 'draft') return `<p class="draft todo">${b[1]}</p>`;
+    if (b[0] === 'shot')  return `<figure style="margin:0">
+        <span class="plate ${b[2]}">${img(b[1], '')}<span class="bloom"></span></span>
+        <figcaption class="read__fig">${b[3]}</figcaption></figure>`;
+    return '';
+  }).join('');
+  reader.showModal();
+  reader.scrollTop = 0;
+}
+
+function openFrame(ref){
+  const [id, i] = ref.split(':');
+  const f = FRAMES[id] && FRAMES[id].list[+i];
+  if (!f) return;
+  const plate = document.getElementById('lb-plate');
+  plate.className = 'plate fallback ' + f.cls;
+  plate.innerHTML = img(f.src, f.t)
+    + `<span class="missing" data-fallback>${f.no} — photo file not found</span>`;
+  document.getElementById('lb-title').textContent = f.no + ' — ' + f.t;
+  document.getElementById('lb-cred').textContent  = f.c;
+  /* when the real photograph loads, drop the stand-in plate and its notice */
+  const m = plate.querySelector('img');
+  const good = () => {
+    plate.classList.remove('fallback', 'p-cloud', 'p-gold');
+    const n = plate.querySelector('[data-fallback]');
+    if (n) n.remove();
+  };
+  if (m) { m.complete ? good() : m.addEventListener('load', good); }
+  lb.showModal();
+}
+
+document.addEventListener('click', e => {
+  const read = e.target.closest('[data-read]');
+  if (read) { e.preventDefault(); openPost(read.dataset.read); return; }
+  const frame = e.target.closest('[data-open]');
+  if (frame) { openFrame(frame.dataset.open); return; }
+  const close = e.target.closest('[data-close]');
+  if (close) { close.closest('dialog').close(); }
+});
+
+[reader, lb].forEach(d => {
+  d.addEventListener('click', e => { if (e.target === d) d.close(); });
+});
+
+/* ═══ the enquiry form composes a real email ═══ */
+
+document.getElementById('enq').addEventListener('submit', e => {
+  e.preventDefault();
+  const f = new FormData(e.target);
+  const body = [
+    'Name: '  + (f.get('name')  || ''),
+    'Email: ' + (f.get('email') || ''),
+    '',
+    f.get('message') || ''
+  ].join('\n');
+  location.href = 'mailto:jahidulislam2004@gmail.com?subject='
+    + encodeURIComponent(f.get('subject') || 'Hello') + '&body=' + encodeURIComponent(body);
+  document.getElementById('enq-note').textContent = 'Your mail app should be opening.';
+});
+
+/* ═══ the marquee, doubled so the -50% keyframe loops seamlessly ═══ */
+
+const WORDS = ['Bandarban','Cloud line','Before seven','Bamboo platforms','Above the valley'];
+document.getElementById('band').innerHTML =
+  [0,1].map(() => WORDS.map(w => `<b>${w}<em>&#47;</em></b>`).join('')).join('');
+
+/* ═══ scroll engine ═════════════════════════════════════════════
+   One rAF-throttled listener writes CSS variables; CSS composes them
+   into transforms. No two systems ever own the same `transform`.
+   All of it is decoration — the page reads fine frozen. */
+
+const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+if (!still) {
+  const railBar  = document.getElementById('rail');
+  const heroWrap = document.querySelector('.hero__plate');
+  const heroSec  = document.querySelector('.hero');
+  const stageEl  = document.getElementById('stage-plates');
+  const voids    = [...document.querySelectorAll('.void')];
+
+  /* how far a section has travelled through the viewport: 0 entering,
+     1 leaving. Clamped, so off-screen sections sit at their limits. */
+  const through = el => {
+    const r = el.getBoundingClientRect();
+    return Math.min(1, Math.max(0, (innerHeight - r.top) / (innerHeight + r.height)));
+  };
+
+  let queued = false;
+  function frame(){
+    queued = false;
+    const doc = document.documentElement;
+
+    const max = doc.scrollHeight - innerHeight;
+    railBar.style.setProperty('--p', max > 0 ? (scrollY / max).toFixed(4) : 0);
+
+    /* the frame lags the type, so the two separate as you go */
+    if (heroSec.getBoundingClientRect().bottom > 0) {
+      heroWrap.style.transform = `translateY(${(-through(heroSec) * 96).toFixed(1)}px)`;
+    }
+
+    /* the black ground: the floor tilts and creeps, so the room itself
+       moves rather than just the things standing in it */
+    voids.forEach(v => {
+      const p = through(v) - .5;
+      const floor = v.querySelector('.void__floor');
+      if (floor) {
+        floor.style.setProperty('--tilt', (p * -7).toFixed(2));
+        floor.style.setProperty('--fty', (p * 60).toFixed(1) + 'px');
+      }
+    });
+
+    /* scroll steers the 3D: the rail rotates and slides, so the frames
+       turn as you pass them */
+    if (stageEl) {
+      const p = through(stageEl.closest('.void')) - .5;
+      stageEl.style.setProperty('--sY', (p * -16).toFixed(2));
+      stageEl.style.setProperty('--tx', (p * -70).toFixed(1) + 'px');
+    }
+  }
+
+  const onScroll = () => { if (!queued) { queued = true; requestAnimationFrame(frame); } };
+  addEventListener('scroll', onScroll, { passive:true });
+  addEventListener('resize', onScroll);
+  frame();
+
+  /* pointer tilt, on top of the angle scroll already gave it */
+  const el = document.getElementById('stage-plates');
+  if (el) {
+    el.addEventListener('pointermove', e => {
+      const r = el.getBoundingClientRect();
+      el.style.setProperty('--pY', (((e.clientX - r.left) / r.width - .5) * 14).toFixed(2));
+      el.style.setProperty('--pX', (((e.clientY - r.top) / r.height - .5) * -7).toFixed(2));
+    });
+    el.addEventListener('pointerleave', () => {
+      el.style.setProperty('--pY', 0);
+      el.style.setProperty('--pX', 0);
+    });
+  }
+}
+
+/* ═══ motion (motion.dev) for the section reveals. The page is
+       complete without it: only what sits below the first screen is
+       hidden, and only once the library has actually loaded. ═══ */
+
+const M = window.Motion;
+if (M && M.animate && M.inView && !still) {
+  const { animate, inView, stagger } = M;
+  document.querySelectorAll('[data-reveal]').forEach(el => {
+    if (el.getBoundingClientRect().top < innerHeight * 0.92) return;
+    const kids = el.hasAttribute('data-stagger') ? [...el.children] : [el];
+    kids.forEach(k => { k.style.opacity = '0'; k.style.transform = 'translateY(16px)'; });
+    inView(el, () => {
+      animate(kids,
+        { opacity: [0, 1], transform: ['translateY(16px)', 'translateY(0px)'] },
+        { duration: .45, ease: [0.22, 1, 0.36, 1],
+          delay: kids.length > 1 ? stagger(0.06) : 0 });
+    }, { amount: 0.2 });
+  });
+}
+</script>

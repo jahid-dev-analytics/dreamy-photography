@@ -1,0 +1,105 @@
+/* Single source of truth — Tailwind v4 @theme.
+   Direction D (the A+B+C merge). Two grounds, one accent.
+   Every component uses ONLY these. No raw hex, no one-off pixels.
+   index.html inlines this same set as plain custom properties so it
+   runs with no build step; keep the two in step. */
+@import "tailwindcss";
+
+@theme {
+  /* ── Palette ───────────────────────────────────────────────
+     paper + ink from B, void from C, accent from A.
+     C's magenta/cyan duotone was dropped: it edited the work. */
+  --color-paper:           #f4f4f1;
+  --color-paper-inset:     #eaeae5;
+  --color-void:            #000000;
+
+  --color-ink:             #16161a;
+  --color-ink-muted:       #6e6e68;
+  --color-ink-faint:       #a3a39c;
+  --color-on-void:         #ffffff;
+  --color-on-void-muted:   #8a8a90;
+
+  --color-accent:          #1f3bef;  /* ultramarine, on paper — 6.9:1 */
+  --color-accent-on-void:  #6e82ff;  /* lifted for black — 5.6:1 */
+
+  --color-rule:            #dcdcd6;
+  --color-rule-strong:     #16161a;
+  --color-rule-void:       rgb(255 255 255 / 0.14);
+
+  /* states */
+  --color-focus:           #1f3bef;
+  --color-success:         #1f7a4d;
+  --color-danger:          #b3261e;
+  --color-disabled:        #c9c9c7;
+
+  /* ── Type ──────────────────────────────────────────────────
+     One sans does every job (B). Anton survives for the wordmark
+     alone — that is A's masthead, demoted. Mono for labels,
+     captions and technical credits: the one thread all three shared. */
+  --font-sans:  "Schibsted Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono:  "DM Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-mast:  "Anton", "Schibsted Grotesk", sans-serif;
+
+  /* modular scale, ratio 1.25, base 16 — step 49 deliberately skipped */
+  --text-micro:      0.6875rem;  /* 11 */
+  --text-micro--line-height: 1;
+  --text-xs:         0.8rem;     /* 12.8 */
+  --text-xs--line-height: 1.4;
+  --text-body:       1rem;       /* 16 */
+  --text-body--line-height: 1.45;
+  --text-lead:       1.25rem;    /* 20 */
+  --text-lead--line-height: 1.4;
+  --text-h4:         1.5625rem;  /* 25 */
+  --text-h4--line-height: 1.24;
+  --text-h3:         1.953rem;   /* 31 */
+  --text-h3--line-height: 1.18;
+  --text-h2:         2.441rem;   /* 39 */
+  --text-h2--line-height: 1.06;
+  --text-h1:         3.8rem;     /* 61 */
+  --text-h1--line-height: 1.02;
+  --text-display:    clamp(3.25rem, 9.4vw, 7.5rem);
+  --text-display--line-height: 0.94;
+
+  --tracking-tight:  -0.03em;
+  --tracking-normal:  0em;
+  --tracking-label:   0.13em;
+
+  /* ── Spacing — 8-point ─────────────────────────────────── */
+  --spacing: 0.25rem;      /* 4px base unit; all p-*/m-* are multiples */
+  --space-8:    0.5rem;
+  --space-16:   1rem;
+  --space-24:   1.5rem;
+  --space-32:   2rem;
+  --space-48:   3rem;
+  --space-64:   4rem;
+  --space-96:   6rem;
+  --space-128:  8rem;
+
+  --measure: 46ch;
+  --shell:   1440px;
+  --gutter:  clamp(1.25rem, 3.4vw, 3rem);
+
+  /* ── Radius ────────────────────────────────────────────────
+     Sharp on paper. Corners round only when a plate leaves the
+     page and floats — the void stage and the lightbox. */
+  --radius-sharp: 0px;
+  --radius-plate: 2px;
+  --radius-float: 24px;
+  --radius-pill:  999px;
+
+  /* ── Shadow ────────────────────────────────────────────────
+     None on paper; depth on the void comes from the black itself. */
+  --shadow-none:     none;
+  --shadow-hairline: 0 1px 0 rgb(0 0 0 / 0.06);
+  --shadow-contact:  0 40px 80px -20px rgb(0 0 0 / 0.6);
+  --shadow-lift:     0 18px 40px -12px rgb(0 0 0 / 0.28);
+
+  /* ── Motion ────────────────────────────────────────────── */
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast:  200ms;
+  --duration-base:  320ms;
+  --duration-slow:  500ms;
+  --duration-panel: 600ms;
+  --stagger:         60ms;
+  --lift:           16px;
+}

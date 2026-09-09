@@ -1,0 +1,372 @@
+<title>Lindqvist Three Ways</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600&family=Schibsted+Grotesk:wght@400;500&family=Familjen+Grotesk:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* == Viewing-room chrome. Deliberately achromatic so the three palettes
+      below never have to compete with it. Committed single theme. == */
+:root{
+  --wall:#14141a; --wall-lo:#0d0d12;
+  --chrome-ink:#eceaf0; --chrome-mid:#9d9ba8; --chrome-dim:#6a6875;
+  --hair:rgb(255 255 255 / .10); --hair-2:rgb(255 255 255 / .18);
+  --f-ui:"Archivo",ui-sans-serif,system-ui,sans-serif;
+  --f-mono:"DM Mono",ui-monospace,"SFMono-Regular",monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--wall);color:var(--chrome-ink);font-family:var(--f-ui);
+     -webkit-font-smoothing:antialiased}
+.wrap{max-width:1440px;margin:0 auto;padding:clamp(20px,3.4vw,48px)}
+
+/* -- header ---------------------------------------------- */
+.bar{display:flex;flex-direction:column;gap:20px;padding-bottom:28px;
+     border-bottom:1px solid var(--hair);margin-bottom:32px}
+.bar__id{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;
+     text-transform:uppercase;color:var(--chrome-dim);display:flex;gap:18px;flex-wrap:wrap}
+.bar h1{margin:0;font-size:clamp(26px,3.6vw,44px);font-weight:600;letter-spacing:-.022em;
+     line-height:1.06;text-wrap:balance;max-width:22ch}
+.bar h1 em{font-style:normal;color:var(--chrome-mid)}
+.bar__note{margin:0;max-width:62ch;font-size:15px;line-height:1.55;color:var(--chrome-mid)}
+.switch{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.switch button{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+     padding:9px 15px;background:transparent;color:var(--chrome-mid);
+     border:1px solid var(--hair-2);border-radius:999px;cursor:pointer;
+     transition:color .2s cubic-bezier(.22,1,.36,1),background .2s cubic-bezier(.22,1,.36,1),
+                border-color .2s cubic-bezier(.22,1,.36,1)}
+.switch button:hover{color:var(--chrome-ink);border-color:var(--chrome-mid)}
+.switch button[aria-pressed="true"]{background:var(--chrome-ink);color:#101015;border-color:var(--chrome-ink)}
+.switch button:focus-visible{outline:2px solid #fff;outline-offset:3px}
+
+/* -- deck ------------------------------------------------ */
+.deck{display:grid;gap:clamp(24px,2.6vw,40px);align-items:start}
+@media (min-width:1040px){ .deck[data-view="compare"]{grid-template-columns:repeat(3,1fr)} }
+.deck:not([data-view="compare"]){max-width:1000px;margin:0 auto}
+
+.col{display:flex;flex-direction:column;gap:16px;min-width:0}
+.col__head{display:flex;flex-direction:column;gap:8px}
+.badge{display:flex;align-items:baseline;gap:10px}
+.badge b{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;color:var(--chrome-dim);
+     font-weight:400}
+.badge h2{margin:0;font-size:19px;font-weight:600;letter-spacing:-.01em}
+.concept{margin:0;font-size:13.5px;line-height:1.5;color:var(--chrome-mid);text-wrap:pretty}
+
+/* the preview frame: a mounted print on the wall */
+.screen{container-type:inline-size;position:relative;overflow:hidden;
+     aspect-ratio:4/5;border-radius:3px;box-shadow:0 24px 60px -24px rgb(0 0 0 / .8)}
+.deck:not([data-view="compare"]) .screen{aspect-ratio:16/10}
+
+/* specs strip under each print */
+.specs{display:flex;flex-direction:column;gap:12px}
+.sw{display:flex;gap:0;border:1px solid var(--hair);border-radius:2px;overflow:hidden}
+.sw i{flex:1;height:26px;display:block}
+.swlabels{display:flex;flex-wrap:wrap;gap:4px 14px;font-family:var(--f-mono);font-size:10.5px;
+     letter-spacing:.04em;color:var(--chrome-dim);font-variant-numeric:tabular-nums;font-style:normal}
+.meta{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 14px;
+     font-size:12.5px;line-height:1.45}
+.meta dt{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+     color:var(--chrome-dim);padding-top:2px}
+.meta dd{margin:0;color:var(--chrome-mid)}
+.meta dd b{color:var(--chrome-ink);font-weight:500}
+
+.foot{margin-top:44px;padding-top:24px;border-top:1px solid var(--hair);
+     font-size:13.5px;line-height:1.6;color:var(--chrome-mid);max-width:72ch}
+.foot strong{color:var(--chrome-ink);font-weight:600}
+
+/* film grain, shared by every plate (::before so C's duotone ::after is free) */
+.grain::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:.17;mix-blend-mode:overlay}
+
+/* the plates - no photographs are loaded; these are built in CSS and
+   graded per direction, so the comparison stays about design */
+.plate{position:relative;overflow:hidden}
+.p-coast{background:linear-gradient(178deg,#c6d2d8 0%,#a7b5bd 34%,#93a2ab 45.4%,
+     #46535c 46.2%,#33404a 72%,#1e272e 100%)}
+.p-coast .horizon{position:absolute;left:0;right:0;top:46%;height:1px;background:rgb(255 255 255 /.52)}
+.p-coast .sun{position:absolute;inset:0;background:radial-gradient(38% 26% at 68% 30%,
+     rgb(255 252 240 / .55),transparent 70%)}
+.p-night{background:radial-gradient(58% 46% at 32% 72%,#f2a94e 0%,#a3560f 30%,
+     #3d2208 62%,#120c06 88%,#080604 100%)}
+.p-salt{background:linear-gradient(180deg,#f4f1e8 0%,#e9e3d5 50%,#cdc5b3 51%,#a89f8d 100%)}
+/* an interior: window light between two dark walls, floor falling into shadow */
+.p-room{background-image:
+  linear-gradient(180deg,rgb(0 0 0 /0) 0 56%,rgb(0 0 0 /.24) 74%,rgb(0 0 0 /.55) 100%),
+  linear-gradient(92deg,#191d20 0%,#272d31 21%,#e6e2d6 33%,#faf8f1 43%,#dad5c7 51%,
+      #5a6166 59%,#2b3134 78%,#1d2124 100%)}
+.vig{position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 45%,
+     transparent 40%,rgb(0 0 0 / .38) 100%)}
+
+/* ==========================================================
+   A - BROADSHEET.  cold newsprint, ultramarine, masthead scale
+   ========================================================== */
+.dir-a{--paper:#e7eae7;--ink:#111312;--soft:#5f6663;--blue:#1f3bef;
+  position:absolute;inset:0;background:var(--paper);color:var(--ink);
+  font-family:"Archivo",sans-serif;display:flex;flex-direction:column}
+.dir-a .top{display:flex;justify-content:space-between;align-items:baseline;
+  padding:3.4cqi 3.6cqi 2cqi;font-family:var(--f-mono);
+  font-size:max(8.5px,1.9cqi);letter-spacing:.12em;text-transform:uppercase;color:var(--soft)}
+.dir-a .top b{color:var(--blue);font-weight:400}
+.dir-a .rule{height:1px;background:var(--ink);margin:0 3.6cqi}
+.dir-a .mast{margin:1.4cqi 3.6cqi -.4cqi;font-family:"Anton",sans-serif;font-weight:400;
+  font-size:21.5cqi;line-height:.78;letter-spacing:-.012em;text-transform:uppercase;
+  white-space:nowrap}
+.dir-a .body{position:relative;flex:1;display:grid;grid-template-columns:31% 69%;
+  gap:0 3.4cqi;padding-left:3.6cqi;min-height:0}
+.dir-a .kick{padding:3cqi 0 17cqi;display:flex;flex-direction:column;gap:2cqi}
+.dir-a .kick h3{margin:0;font-size:max(12px,3.5cqi);line-height:1.1;font-weight:600;
+  letter-spacing:-.02em;text-wrap:balance}
+.dir-a .kick p{margin:0;font-size:max(9px,2.05cqi);line-height:1.5;color:var(--soft)}
+.dir-a .kick a{margin-top:auto;font-family:var(--f-mono);font-size:max(8.5px,1.9cqi);
+  letter-spacing:.1em;text-transform:uppercase;color:var(--blue);text-decoration:none;
+  border-top:1px solid var(--blue);padding-top:1.4cqi}
+.dir-a .plate{margin:2.6cqi -3.6cqi 0 0;align-self:stretch}
+.dir-a .cap{position:absolute;left:0;bottom:3cqi;background:var(--paper);
+  border-top:1px solid rgb(17 19 18 /.22);
+  padding:1.6cqi 2.6cqi 0 0;font-family:var(--f-mono);font-size:max(8px,1.75cqi);
+  letter-spacing:.05em;line-height:1.45;color:var(--soft);max-width:40%}
+
+/* ==========================================================
+   B - VITRINE.  the Swiss brief: visible grid, one face, oxide red
+   ========================================================== */
+.dir-b{--paper:#f4f4f1;--ink:#16161a;--soft:#8a8a85;--rule:#dcdcd6;--oxide:#b3311f;
+  position:absolute;inset:0;background:var(--paper);color:var(--ink);
+  font-family:"Schibsted Grotesk",sans-serif;display:flex;flex-direction:column;
+  padding:4cqi 4cqi 3.4cqi}
+.dir-b .grid{position:absolute;inset:0;pointer-events:none;opacity:.62;
+  background-image:repeating-linear-gradient(90deg,var(--rule) 0 1px,transparent 1px calc(100%/12));
+  background-position:4cqi 0;background-size:calc(100% - 8cqi) 100%;background-repeat:no-repeat}
+.dir-b .head{position:relative;display:flex;justify-content:space-between;align-items:baseline;
+  font-size:max(8.5px,1.85cqi);letter-spacing:.13em;text-transform:uppercase;font-weight:500}
+.dir-b .head span{color:var(--soft)}
+.dir-b .mid{position:relative;flex:1;display:grid;grid-template-columns:repeat(12,1fr);
+  gap:2.4cqi;align-content:start;padding-top:6cqi;min-height:0}
+.dir-b h3{grid-column:1/8;margin:0;font-size:max(19px,7.6cqi);line-height:1.02;
+  letter-spacing:-.03em;font-weight:400;text-wrap:balance}
+.dir-b .lede{grid-column:1/6;margin:0;font-size:max(9px,2.05cqi);line-height:1.55;color:var(--soft)}
+.dir-b .plate{grid-column:8/13;grid-row:1/3;aspect-ratio:3/4;max-height:34cqi;align-self:start}
+.dir-b .strong{position:relative;height:2px;background:var(--ink);margin:3cqi 0 0}
+.dir-b .index{position:relative;margin:0;list-style:none;padding:0}
+.dir-b .index li{display:grid;grid-template-columns:1fr auto auto;gap:2cqi;align-items:baseline;
+  padding:1.5cqi 0;border-bottom:1px solid var(--rule);
+  font-size:max(9px,2.1cqi);font-variant-numeric:tabular-nums}
+.dir-b .index em{font-style:normal;color:var(--soft)}
+.dir-b .index .on{color:var(--oxide)}
+.dir-b .index li:last-child{border-bottom:0}
+
+/* ==========================================================
+   C - VOID.  the reference pushed: adrift plates, duotone, steered
+   ========================================================== */
+.dir-c{--cy:#10e0ce;
+  position:absolute;inset:0;background:#000;color:#fff;
+  font-family:"Familjen Grotesk",sans-serif;overflow:hidden}
+.dir-c .floor{position:absolute;left:-60%;right:-60%;bottom:-6%;height:80%;
+  background-image:repeating-linear-gradient(90deg,rgb(255 255 255 /.32) 0 1px,transparent 1px 6.2%),
+                   repeating-linear-gradient(0deg,rgb(255 255 255 /.32) 0 1px,transparent 1px 8%);
+  transform:perspective(56cqi) rotateX(74deg);transform-origin:50% 100%;
+  -webkit-mask-image:linear-gradient(to top,#000 0%,transparent 62%);
+  mask-image:linear-gradient(to top,#000 0%,transparent 62%)}
+.dir-c .corners{position:absolute;inset:0;
+  font-family:var(--f-mono);font-size:max(8px,1.7cqi);letter-spacing:.16em;
+  text-transform:uppercase;pointer-events:none}
+.dir-c .corners span{position:absolute}
+.dir-c .tl{top:3.4cqi;left:3.6cqi}
+.dir-c .tr{top:3.4cqi;right:3.6cqi}
+.dir-c .bl{bottom:3.4cqi;left:3.6cqi}
+.dir-c .br{bottom:3.4cqi;right:3.6cqi}
+.dir-c .dim{position:static;color:#8a8a90}
+.dir-c .stage{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  perspective:70cqi}
+.dir-c .rail{display:flex;gap:3.4cqi;transform-style:preserve-3d}
+.dir-c .card{position:relative;width:42cqi;aspect-ratio:16/11;border-radius:1.5cqi;
+  overflow:hidden;flex:none;box-shadow:0 8cqi 10cqi -4cqi rgb(0 0 0 /.9);
+  filter:contrast(1.2) saturate(1.15)}
+.dir-c .card:nth-child(1){transform:rotateY(27deg) translateZ(-3cqi)}
+.dir-c .card:nth-child(3){transform:rotateY(-27deg) translateZ(-3cqi)}
+.dir-c .card::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(124deg,rgb(255 45 111 /.55),rgb(16 224 206 /.44));
+  mix-blend-mode:color}
+/* graded down for the void: pale plates would read as pastel under the duotone */
+.dir-c .p-salt{background-image:linear-gradient(180deg,#c9c3b1 0%,#a2977f 50%,
+  #6a6153 51%,#332f27 100%)}
+.dir-c .p-coast{background-image:linear-gradient(178deg,#7d8b93 0%,#5d6c75 34%,
+  #4c5a63 45.4%,#232d34 46.2%,#182127 72%,#0d1316 100%)}
+.dir-c .card .lbl{position:absolute;left:2.4cqi;bottom:2cqi;z-index:2;
+  font-size:max(10px,2.6cqi);font-weight:500;letter-spacing:-.015em;
+  text-shadow:0 1px 8px rgb(0 0 0 /.6)}
+.dir-c .card .go{position:absolute;right:2.2cqi;bottom:2cqi;z-index:2;
+  width:5.2cqi;height:5.2cqi;min-width:17px;min-height:17px;border-radius:999px;
+  background:#000;color:#fff;display:grid;place-items:center;font-size:max(7px,2cqi)}
+.dir-c .credit{position:absolute;left:50%;top:13cqi;transform:translateX(-50%);
+  font-family:var(--f-mono);font-size:max(8px,1.7cqi);letter-spacing:.1em;
+  text-transform:uppercase;color:var(--cy);white-space:nowrap}
+@media (prefers-reduced-motion:no-preference){
+  .dir-c .rail{animation:drift 19s cubic-bezier(.42,0,.58,1) infinite alternate}
+  @keyframes drift{
+    from{transform:translateX(-4.4cqi) rotateY(-2.4deg)}
+    to{transform:translateX(4.4cqi) rotateY(2.4deg)}}
+}
+</style>
+
+<div class="wrap">
+  <header class="bar">
+    <div class="bar__id"><span>Studio note</span><span>09 Sep 2026</span><span>Step 05 &mdash; divergence</span></div>
+    <h1>Three directions for <em>Vera Lindqvist</em></h1>
+    <p class="bar__note">One photographer, one set of six series, three incompatible points of view &mdash;
+      not recolours of a single layout. The plates are built in CSS and graded per direction, so what
+      you are comparing is composition and type, never the photograph. Pick one and tell me what to merge.</p>
+    <div class="switch" role="group" aria-label="View">
+      <button type="button" data-view="compare" aria-pressed="true">Compare</button>
+      <button type="button" data-view="a" aria-pressed="false">A &mdash; Broadsheet</button>
+      <button type="button" data-view="b" aria-pressed="false">B &mdash; Vitrine</button>
+      <button type="button" data-view="c" aria-pressed="false">C &mdash; Void</button>
+    </div>
+  </header>
+
+  <main class="deck" data-view="compare">
+
+    <!-- A ---------------------------------------------------- -->
+    <article class="col" data-dir="a">
+      <div class="col__head">
+        <div class="badge"><b>A</b><h2>Broadsheet</h2></div>
+        <p class="concept">A photo-monthly cover: her name at masthead scale, one plate cropped hard
+          enough to run off two edges, and the series set like a contents page.</p>
+      </div>
+      <div class="screen">
+        <div class="dir-a">
+          <div class="top"><span>No. 04 &mdash; Winter</span><b>Gothenburg</b></div>
+          <div class="rule"></div>
+          <div class="mast">Lindqvist</div>
+          <div class="body">
+            <div class="kick">
+              <h3>Kattegat, in Winter</h3>
+              <p>Twelve weeks on a frozen coast, one exposure a day at the same hour, until the
+                light stopped arriving.</p>
+              <a href="#">See all 41 plates &rarr;</a>
+            </div>
+            <div class="plate p-coast grain">
+              <div class="sun"></div><div class="horizon"></div><div class="vig"></div>
+            </div>
+            <div class="cap">Pl. 17 &mdash; Hasselblad 500C/M &middot; Ilford Delta 400 &middot;
+              gelatin silver, 16&times;20 in, ed. 12</div>
+          </div>
+        </div>
+      </div>
+      <div class="specs">
+        <div class="sw" aria-hidden="true">
+          <i style="background:#e7eae7"></i><i style="background:#111312"></i>
+          <i style="background:#5f6663"></i><i style="background:#b8bfbb"></i>
+          <i style="background:#1f3bef"></i>
+        </div>
+        <em class="swlabels"><span>#E7EAE7</span><span>#111312</span><span>#5F6663</span><span>#B8BFBB</span><span>#1F3BEF</span></em>
+        <dl class="meta">
+          <dt>Type</dt><dd><b>Anton</b> masthead / <b>Archivo</b> text &mdash; a 10:1 size ratio</dd>
+          <dt>Grid</dt><dd>31 / 69 asymmetric, plate bleeds off the right edge</dd>
+          <dt>Risk</dt><dd>The masthead will always out-shout the work. Right for an author, wrong for a hire.</dd>
+        </dl>
+      </div>
+    </article>
+
+    <!-- B ---------------------------------------------------- -->
+    <article class="col" data-dir="b">
+      <div class="col__head">
+        <div class="badge"><b>B</b><h2>Vitrine</h2></div>
+        <p class="concept">Your Swiss brief taken literally: the twelve-column grid left visible, one
+          sans at three sizes, and most of the page kept empty so a single print carries it.</p>
+      </div>
+      <div class="screen">
+        <div class="dir-b">
+          <div class="grid"></div>
+          <div class="head"><strong>Vera Lindqvist</strong><span>Photography / Gothenburg</span></div>
+          <div class="mid">
+            <h3>Light, and what it leaves.</h3>
+            <div class="plate p-room grain"><div class="vig"></div></div>
+            <p class="lede">Six series, 2019&ndash;2026. Silver and colour negative, printed by hand.
+              Editions of twelve.</p>
+          </div>
+          <div class="strong"></div>
+          <ul class="index">
+            <li><span>Kattegat, in Winter</span><em>41 plates</em><em>2024</em></li>
+            <li><span>The Long Room</span><em>18 plates</em><em>2022</em></li>
+            <li><span class="on">Salt Flats / Return</span><em class="on">on view</em><em class="on">2025</em></li>
+            <li><span>Nightshift</span><em>26 plates</em><em>2023</em></li>
+          </ul>
+        </div>
+      </div>
+      <div class="specs">
+        <div class="sw" aria-hidden="true">
+          <i style="background:#f4f4f1"></i><i style="background:#16161a"></i>
+          <i style="background:#8a8a85"></i><i style="background:#dcdcd6"></i>
+          <i style="background:#b3311f"></i>
+        </div>
+        <em class="swlabels"><span>#F4F4F1</span><span>#16161A</span><span>#8A8A85</span><span>#DCDCD6</span><span>#B3311F</span></em>
+        <dl class="meta">
+          <dt>Type</dt><dd><b>Schibsted Grotesk</b> alone &mdash; weight 400 throughout, never bold</dd>
+          <dt>Grid</dt><dd>Twelve visible columns; headline 1&ndash;7, plate 8&ndash;12</dd>
+          <dt>Risk</dt><dd>Restraint reads as premium or as unfinished. Nothing here rescues weak pictures.</dd>
+        </dl>
+      </div>
+    </article>
+
+    <!-- C ---------------------------------------------------- -->
+    <article class="col" data-dir="c">
+      <div class="col__head">
+        <div class="badge"><b>C</b><h2>Void</h2></div>
+        <p class="concept">Your reference pushed further: plates adrift on a black grid plane, graded to
+          a hard duotone, labels in the corners instead of a nav &mdash; a room you steer, not a page you scroll.</p>
+      </div>
+      <div class="screen">
+        <div class="dir-c">
+          <div class="floor"></div>
+          <div class="credit">Salt Flats / Return &mdash; 2025</div>
+          <div class="stage">
+            <div class="rail">
+              <div class="card p-night grain"><div class="vig"></div>
+                <span class="lbl">Nightshift</span><span class="go" aria-hidden="true">&#8599;</span></div>
+              <div class="card p-salt grain"><div class="vig"></div>
+                <span class="lbl">Salt Flats / Return</span><span class="go" aria-hidden="true">&#8599;</span></div>
+              <div class="card p-coast grain"><div class="sun"></div><div class="horizon"></div><div class="vig"></div>
+                <span class="lbl">Kattegat</span><span class="go" aria-hidden="true">&#8599;</span></div>
+            </div>
+          </div>
+          <div class="corners">
+            <span class="tl">Vera Lindqvist</span>
+            <span class="tr">Contact</span>
+            <span class="bl">Series <span class="dim">/ Index</span></span>
+            <span class="br">Prints</span>
+          </div>
+        </div>
+      </div>
+      <div class="specs">
+        <div class="sw" aria-hidden="true">
+          <i style="background:#000000"></i><i style="background:#ffffff"></i>
+          <i style="background:#ff2d6f"></i><i style="background:#10e0ce"></i>
+          <i style="background:#8a8a90"></i>
+        </div>
+        <em class="swlabels"><span>#000000</span><span>#FFFFFF</span><span>#FF2D6F</span><span>#10E0CE</span><span>#8A8A90</span></em>
+        <dl class="meta">
+          <dt>Type</dt><dd><b>Familjen Grotesk</b> titles / <b>DM Mono</b> corner labels</dd>
+          <dt>Grid</dt><dd>None. A perspective floor at 74&deg; and a cylinder of plates</dd>
+          <dt>Risk</dt><dd>The duotone edits her work for her, and a steered room has no obvious way in.</dd>
+        </dl>
+      </div>
+    </article>
+  </main>
+
+  <p class="foot"><strong>Where they actually conflict.</strong> A and C both put the site in front of
+    the picture &mdash; A with type, C with grading and 3D. B is the only one that lets a photograph
+    arrive uninterpreted, and it is also the one that dies if the pictures are ordinary. The likely
+    merge is <strong>B&rsquo;s grid and single-face discipline</strong> carrying <strong>C&rsquo;s black
+    stage for the series view</strong>, with A&rsquo;s masthead demoted to a small wordmark. Tell me if
+    that is the trade you want, or pick one outright.</p>
+</div>
+
+<script>
+const deck = document.querySelector('.deck');
+const btns = [...document.querySelectorAll('.switch button')];
+btns.forEach(b => b.addEventListener('click', () => {
+  const v = b.dataset.view;
+  deck.dataset.view = v;
+  btns.forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  document.querySelectorAll('.col').forEach(c => {
+    c.hidden = v !== 'compare' && c.dataset.dir !== v;
+  });
+}));
+</script>
