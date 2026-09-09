@@ -74,8 +74,26 @@ the CSS gradient shown if the file is missing.
 ### Adding a photograph
 
 Resize it to about 1700px on the long edge, drop it in `assets/`, and add an
-entry to `FRAMES`. Missing files fall back to a CSS gradient rather than a
-broken image, so nothing breaks while you are mid-edit.
+entry to `FRAMES` pointing at the `.jpg`.
+
+**Then make the `.webp` beside it.** `img()` builds a `<picture>` and derives
+the WebP path from the JPEG name, so every `assets/x.jpg` wants an
+`assets/x.webp` next to it:
+
+```bash
+npx --yes sharp-cli --input assets/your-photo.jpg --output assets/ --format webp --quality 82
+```
+
+No install, and q82 is what the existing eight were encoded at — that command
+reproduces them byte for byte.
+
+Skip it and the photograph will not show up. `<picture>` commits to the
+`<source>` it picks and does not retry the `<img>` when that 404s, so you get
+the CSS gradient plate instead of your photo. A JPEG with no WebP sibling is
+the one case where the fallback works against you.
+
+Missing the JPEG as well — mid-edit, before you have copied anything in — still
+degrades to the gradient plate rather than a broken image.
 
 ### The placeholders
 
