@@ -1,0 +1,8 @@
+# Crawlers read robots.txt from the root of the host. On GitHub Pages this
+# file sits under /dreamy-photography/ and is not consulted; the host root has
+# none, which already means "crawl everything". On the Cloudflare Pages copy
+# the site is at the root, so there it applies.
+User-agent: *
+Allow: /
+
+Sitemap: https://jahid-dev-analytics.github.io/dreamy-photography/sitemap.xml

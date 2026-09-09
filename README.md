@@ -29,6 +29,8 @@ npx serve .
 |----------------------|-------------------------------------------------------------------|
 | `index.html`         | The whole site — markup, styles and scripts in one file            |
 | `404.html`           | Shown for any unknown path. Same tokens, kept in sync by hand      |
+| `sitemap.xml`        | One URL. Submitted in Google Search Console; bump `lastmod` when content changes |
+| `robots.txt`         | Allow-all plus the sitemap pointer. Only consulted on the Cloudflare copy, where the site is at the host root |
 | `assets/`            | The eight photographs, resized to 1700px on the long edge, as both `.jpg` and `.webp` |
 | `design/`            | The design system this was built from — see below                  |
 | `build-artifact.mjs` | Inlines the photos as data URIs for hosts that block relative media |
