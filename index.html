@@ -623,8 +623,17 @@ const POSTS = {
 /* ═══ media, falling back to the CSS plate if a file is absent ══ */
 
 function img(src, alt){
-  return `<img class="shot" src="${src}" alt="${alt}" loading="lazy" decoding="async"
-    onerror="this.remove()">`;
+  /* WebP first, the .jpg as the fallback source. Browsers without WebP
+     ignore the <source> and take the <img>, so nothing needs a polyfill.
+     <picture> is unpositioned, so .shot still absolutely fills .plate. */
+  const webp = src.replace(/\.jpg$/, ".webp");
+  /* build-artifact.mjs rewrites src to a data URI, which has no .jpg to
+     swap. Emit no <source> then, rather than one claiming image/webp
+     over JPEG bytes. */
+  const source = webp === src ? "" : `<source srcset="${webp}" type="image/webp">`;
+  return `<picture>${source}<img class="shot"
+    src="${src}" alt="${alt}" loading="lazy" decoding="async"
+    onerror="this.remove()"></picture>`;
 }
 
 /* ═══ the photo stage ═══ */

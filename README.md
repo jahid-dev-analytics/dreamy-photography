@@ -6,6 +6,8 @@ above the cloud line in Bandarban, November 2025.
 No build step, no framework, no `npm install`. It is one HTML file and eight
 photographs.
 
+**Live:** <https://jahid-dev-analytics.github.io/dreamy-photography/>
+
 ---
 
 ## Running it locally
@@ -26,7 +28,8 @@ npx serve .
 | Path                 | What it is                                                        |
 |----------------------|-------------------------------------------------------------------|
 | `index.html`         | The whole site — markup, styles and scripts in one file            |
-| `assets/`            | The eight photographs, resized to 1700px on the long edge          |
+| `404.html`           | Shown for any unknown path. Same tokens, kept in sync by hand      |
+| `assets/`            | The eight photographs, resized to 1700px on the long edge, as both `.jpg` and `.webp` |
 | `design/`            | The design system this was built from — see below                  |
 | `build-artifact.mjs` | Inlines the photos as data URIs for hosts that block relative media |
 | `dist/`              | Output of that build. Git-ignored; not needed for GitHub Pages      |
